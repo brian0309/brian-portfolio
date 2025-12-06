@@ -17,91 +17,232 @@ const posts = (await getCollection('blog')).sort(
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			main {
-				width: 960px;
+			:root {
+				--card-radius: 0;
+				--glow: 0 0 25px rgba(0, 255, 65, 0.2);
 			}
-			ul {
+
+			.page-shell {
+				min-height: 100vh;
 				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
+				flex-direction: column;
+				align-items: center;
+				padding: 3rem 1.25rem 4rem;
+				position: relative;
+				z-index: 10;
 			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
+
+			.section-title {
+				font-family: var(--font-bit);
+				color: var(--color-cyber-pink);
+				font-size: clamp(1.5rem, 2vw, 2rem);
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				margin-bottom: 2rem;
 				text-align: center;
 			}
-			ul li:first-child img {
-				width: 100%;
+
+			.blog-grid {
+				list-style: none;
+				padding: 0;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+				gap: 1.5rem;
+				width: min(1200px, 100%);
+				align-items: stretch;
 			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
+
+			@media (min-width: 1100px) {
+				.blog-grid {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+				.blog-card {
+					min-height: 360px;
+				}
 			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
+
+			.blog-card .blog-thumb {
+				border-radius: 0;
 			}
-			ul li a {
+
+			.blog-card {
+				position: relative;
+				display: flex;
+				min-height: 340px;
+				border: 2px solid var(--color-cyber-green);
+				border-radius: var(--card-radius);
+				padding: 1.25rem;
+				background: radial-gradient(120% 120% at 20% 20%, rgba(0, 255, 65, 0.08), rgba(0, 255, 65, 0.02)), #050505;
+				box-shadow: var(--glow);
+				transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+				overflow: hidden;
+			}
+
+			.blog-card::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				pointer-events: none;
+				background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.04));
+			}
+
+			.blog-card:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 0 35px rgba(0, 255, 65, 0.3);
+			}
+
+			.blog-card a {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+				color: #e5e7eb;
+				text-decoration: none;
+				height: 100%;
+			}
+
+			.read-more {
 				display: block;
+				margin-top: auto;
+				padding: 0.65rem 1rem;
+				border: 2px solid var(--color-cyber-green);
+				font-family: var(--font-bit);
+				font-size: 0.78rem;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				text-align: center;
+				color: #f8fafc;
+				background: rgba(0, 255, 65, 0.08);
+				box-shadow: 0 0 18px rgba(0, 255, 65, 0.18);
+				transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 			}
-			.title {
+
+			.read-more:hover {
+				transform: translateY(-2px);
+				background: rgba(0, 255, 65, 0.16);
+				box-shadow: 0 0 28px rgba(0, 255, 65, 0.28);
+			}
+
+			.blog-thumb {
+				width: 100%;
+				border-radius: 12px;
+				overflow: hidden;
+				border: 1px solid rgba(255, 255, 255, 0.06);
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+			}
+
+			.blog-thumb img {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
+
+			.blog-title {
+				font-family: var(--font-bit);
+				font-size: clamp(1rem, 1.2vw, 1.4rem);
+				color: #f8fafc;
 				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+				letter-spacing: 0.04em;
 			}
-			.date {
+
+			.blog-meta {
 				margin: 0;
-				color: rgb(var(--gray));
+				color: #94a3b8;
+				font-size: 0.9rem;
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+
+			.blog-excerpt {
+				margin: 0;
+				color: #cbd5e1;
+				line-height: 1.5;
+				font-size: 0.98rem;
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+
+				.color-1 {
+					border-color: var(--color-cyber-pink);
+					box-shadow: 0 0 25px rgba(255, 0, 255, 0.22);
+					background: radial-gradient(120% 120% at 20% 20%, rgba(255, 0, 255, 0.08), rgba(255, 0, 255, 0.02)), #050505;
+				}
+				.color-1 .read-more {
+					border-color: var(--color-cyber-pink);
+					background: rgba(255, 0, 255, 0.08);
+					box-shadow: 0 0 18px rgba(255, 0, 255, 0.18);
+					color: var(--color-cyber-pink);
+					transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+				}
+				.color-1 .read-more:hover {
+					background: var(--color-cyber-pink);
+					box-shadow: 0 0 28px rgba(255, 0, 255, 0.28);
+					color: #050505;
+				}
+
+			.color-2 {
+				border-color: var(--color-cyber-green);
+				box-shadow: 0 0 25px rgba(0, 255, 65, 0.22);
 			}
+				.color-2 .read-more {
+					border-color: var(--color-cyber-green);
+					background: rgba(0, 255, 65, 0.08);
+					box-shadow: 0 0 18px rgba(0, 255, 65, 0.18);
+					color: var(--color-cyber-green);
+					transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+				}
+				.color-2 .read-more:hover {
+					background: var(--color-cyber-green);
+					box-shadow: 0 0 28px rgba(0, 255, 65, 0.28);
+					color: #050505;
+				}
+
+			.color-3 {
+				border-color: var(--color-cyber-cyan);
+				box-shadow: 0 0 25px rgba(0, 255, 255, 0.22);
+				background: radial-gradient(120% 120% at 20% 20%, rgba(0, 255, 255, 0.08), rgba(0, 255, 255, 0.02)), #050505;
+			}
+				.color-3 .read-more {
+					border-color: var(--color-cyber-cyan);
+					background: rgba(0, 255, 255, 0.08);
+					box-shadow: 0 0 18px rgba(0, 255, 255, 0.18);
+					color: var(--color-cyber-cyan);
+					transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+				}
+				.color-3 .read-more:hover {
+					background: var(--color-cyber-cyan);
+					box-shadow: 0 0 28px rgba(0, 255, 255, 0.28);
+					color: #050505;
+				}
+
 			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
+				.page-shell {
+					padding: 2rem 1rem 3rem;
 				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+				.section-title {
+					margin-bottom: 1.5rem;
 				}
 			}
 		</style>
 	</head>
-	<body>
+	<body class="font-terminal relative">
+		<div class="scanlines"></div>
+		<div class="crt-flicker"></div>
 		<Header />
-		<main>
+		<main class="page-shell">
 			<section>
-				<ul>
+				<h1 class="section-title">&gt;&gt; BLOG_FEED</h1>
+				<ul class="blog-grid">
 					{
-						posts.map((post) => (
-							<li>
+						posts.map((post, index) => (
+							<li class={`blog-card color-${(index % 3) + 1}`}>
 								<a href={`/blog/${post.id}/`}>
 									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+										<div class="blog-thumb">
+											<Image width={720} height={360} src={post.data.heroImage} alt="" />
+										</div>
 									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
+									<h3 class="blog-title">{post.data.title}</h3>
+									<p class="blog-meta">
 										<FormattedDate date={post.data.pubDate} />
 									</p>
+									<span class="read-more">READ_MORE</span>
 								</a>
 							</li>
 						))
