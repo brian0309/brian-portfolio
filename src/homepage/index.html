@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBERPUNK // PORTFOLIO_V1</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config for Custom Colors/Fonts -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            black: '#050505',
+                            dark: '#0a0a0a',
+                            green: '#00ff41',
+                            pink: '#ff00ff',
+                            cyan: '#00ffff',
+                            yellow: '#fcee0a'
+                        }
+                    },
+                    fontFamily: {
+                        'bit': ['"Press Start 2P"', 'cursive'],
+                        'terminal': ['"VT323"', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1f1f1f 1px, transparent 1px), linear-gradient(to bottom, #1f1f1f 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="font-terminal relative">
+
+    <!-- BUG CONTAINER: Holds all the animated bugs -->
+    <div id="bug-container" class="bug-container"></div>
+
+    <!-- CRT Overlay Elements -->
+    <div class="scanlines"></div>
+    <div class="crt-flicker"></div>
+
+    <!-- Sticky Header -->
+    <header
+        class="sticky top-0 z-50 bg-cyber-dark/95 border-b-2 border-cyber-green backdrop-blur-sm shadow-[0_0_15px_rgba(0,255,65,0.3)]">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-bit text-cyber-green glitch-text hover:text-cyber-pink transition-colors"
+                data-text="<BRIAN/>">
+                &lt;BRIAN/&gt;
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex space-x-8 text-xl">
+                <a href="#about"
+                    class="text-cyber-cyan hover:text-white hover:underline decoration-wavy decoration-cyber-pink underline-offset-4">/ABOUT</a>
+                <a href="#skills"
+                    class="text-cyber-cyan hover:text-white hover:underline decoration-wavy decoration-cyber-pink underline-offset-4">/SKILLS</a>
+                <a href="#projects"
+                    class="text-cyber-cyan hover:text-white hover:underline decoration-wavy decoration-cyber-pink underline-offset-4">/PROJECTS</a>
+                <a href="#contact"
+                    class="text-cyber-cyan hover:text-white hover:underline decoration-wavy decoration-cyber-pink underline-offset-4">/CONTACT</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn"
+                class="md:hidden text-cyber-green border border-cyber-green p-2 hover:bg-cyber-green hover:text-black transition-colors font-bit text-xs">
+                [MENU]
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay (CRT Pop-up) -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-cyber-black z-40 hidden flex-col justify-center items-center space-y-8 border-4 border-cyber-pink">
+        <div class="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
+        <a href="#about"
+            class="menu-link text-4xl text-cyber-green font-bit hover:text-cyber-pink hover:translate-x-2 transition-transform">ABOUT_ME</a>
+        <a href="#skills"
+            class="menu-link text-4xl text-cyber-green font-bit hover:text-cyber-pink hover:translate-x-2 transition-transform">SKILLS</a>
+        <a href="#projects"
+            class="menu-link text-4xl text-cyber-green font-bit hover:text-cyber-pink hover:translate-x-2 transition-transform">PROJECTS</a>
+        <a href="#contact"
+            class="menu-link text-4xl text-cyber-green font-bit hover:text-cyber-pink hover:translate-x-2 transition-transform">CONTACT</a>
+        <button id="close-menu"
+            class="mt-8 text-red-500 font-terminal text-2xl border border-red-500 px-4 py-2 hover:bg-red-500 hover:text-black">[CLOSE_SYSTEM]</button>
+    </div>
+
+
+    <!-- Win Popup Modal -->
+    <div id="win-modal" class="fixed inset-0 z-[100] hidden flex justify-center items-center">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div
+            class="relative bg-black border-4 border-cyber-green p-8 md:p-12 max-w-lg md:max-w-2xl w-full mx-4 shadow-[0_0_50px_rgba(0,255,65,0.4)] overflow-hidden">
+            <!-- Close Button -->
+            <button id="close-win-modal"
+                class="absolute top-2 right-2 text-cyber-pink font-bit text-xs border border-cyber-pink px-2 py-1 hover:bg-cyber-pink hover:text-black transition-colors">
+                [CLOSE]
+            </button>
+
+            <div class="text-center mt-6">
+                <h2 class="text-1xl sm:text-4xl md:text-3xl lg:text-4xl font-bit text-cyber-green mb-6 glitch-text break-words leading-tight"
+                    data-text="CONGRATULATIONS!">CONGRATULATIONS!</h2>
+                <p class="text-gray-300 font-terminal text-lg md:text-2xl mb-8">
+                    SYSTEM STATUS: CLEAN.<br>
+                    YOU ELIMINATED ALL THE BUGS!
+                </p>
+                <div class="text-cyber-yellow font-bit text-xs md:text-base animate-pulse">
+                    > REBOOTING_SYSTEM...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col justify-center items-center text-center p-4 bg-grid-pattern">
+            <h2 class="text-cyber-pink font-bit text-sm md:text-xl mb-4">IDENT: USER_01</h2>
+            <div
+                class="border-2 border-cyber-green p-6 md:p-10 bg-black/80 shadow-[0_0_20px_rgba(0,255,65,0.2)] max-w-4xl w-full">
+                <h1 class="text-2xl sm:text-4xl md:text-6xl font-bit text-white mb-6 leading-relaxed break-words">
+                    <span id="typewriter" class="text-cyber-cyan"></span><span class="cursor">&nbsp;</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 mt-4 font-terminal">Building digital realities in a chaotic
+                    web.</p>
+
+                <div class="mt-10 flex flex-col md:flex-row justify-center gap-4">
+                    <a href="#projects"
+                        class="px-8 py-3 border-2 border-cyber-pink text-cyber-pink font-bit text-xs md:text-sm uppercase tracking-widest hover-glitch transition-all">
+                        Initialize_Projects
+                    </a>
+                    <a href="#contact"
+                        class="px-8 py-3 border-2 border-cyber-green text-cyber-green font-bit text-xs md:text-sm uppercase tracking-widest hover-glitch transition-all">
+                        Establish_Link
+                    </a>
+                </div>
+
+                <!-- Bug Game Status -->
+                <div id="bug-status" class="mt-8 font-terminal text-lg md:text-xl">
+                    <span id="status-text" class="text-cyber-yellow">SYSTEM STATUS: BUGS: [<span id="bug-count">0</span>] ELIMINATED: [<span id="eliminated-count">0</span>]</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 px-4 container mx-auto">
+            <div class="flex flex-col md:flex-row gap-10 items-center">
+                <div class="w-full md:w-1/2 border-l-4 border-cyber-pink pl-6">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bit text-cyber-pink mb-6">>> WHO_AM_I?</h2>
+                    <p class="text-xl md:text-2xl leading-relaxed text-gray-300">
+                        I am a full-stack developer obsessed with retro aesthetics and clean code.
+                        Functioning primarily on coffee and syntax errors, I craft responsive websites
+                        that feel like a blast from the past with the power of modern engines.
+                    </p>
+                    <div class="mt-6 text-cyber-yellow">
+                        > Current Status: <span class="animate-pulse">ONLINE</span><br>
+                        > Location: Cyberspace<br>
+                        > Mission: Create cool stuff.
+                    </div>
+                </div>
+                <!-- 8-bit Avatar Placeholder -->
+                <div class="w-full md:w-1/2 flex justify-center">
+                    <div
+                        class="w-64 h-64 border-4 border-cyber-cyan bg-black relative flex items-center justify-center shadow-[10px_10px_0px_#00ffff]">
+                        <span class="font-bit text-cyber-cyan text-6xl">:)</span>
+                        <div class="absolute -bottom-6 -right-6 text-cyber-green font-terminal text-xl">IMG_AVATAR.PNG
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-20 px-4 bg-cyber-dark border-t border-b border-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-xl sm:text-3xl md:text-4xl font-bit text-cyber-cyan mb-12 text-center glitch-text"
+                    data-text=">> SKILL_TREE">>> SKILL_TREE</h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Skill Card 1 -->
+                    <div class="border-2 border-gray-700 bg-black p-6 hover:border-cyber-green transition-colors group">
+                        <div class="text-4xl text-cyber-green mb-2 group-hover:animate-bounce">&lt;/&gt;</div>
+                        <h3 class="text-2xl font-bit text-white">HTML5</h3>
+                        <div class="w-full bg-gray-800 h-2 mt-4">
+                            <div class="bg-cyber-green h-2 w-[95%]"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Card 2 -->
+                    <div class="border-2 border-gray-700 bg-black p-6 hover:border-cyber-pink transition-colors group">
+                        <div class="text-4xl text-cyber-pink mb-2 group-hover:animate-bounce">#</div>
+                        <h3 class="text-2xl font-bit text-white">CSS3</h3>
+                        <div class="w-full bg-gray-800 h-2 mt-4">
+                            <div class="bg-cyber-pink h-2 w-[90%]"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Card 3 -->
+                    <div
+                        class="border-2 border-gray-700 bg-black p-6 hover:border-cyber-yellow transition-colors group">
+                        <div class="text-4xl text-cyber-yellow mb-2 group-hover:animate-bounce">{}</div>
+                        <h3 class="text-2xl font-bit text-white">JS/ES6</h3>
+                        <div class="w-full bg-gray-800 h-2 mt-4">
+                            <div class="bg-cyber-yellow h-2 w-[85%]"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Card 4 -->
+                    <div class="border-2 border-gray-700 bg-black p-6 hover:border-cyber-cyan transition-colors group">
+                        <div class="text-4xl text-cyber-cyan mb-2 group-hover:animate-bounce">R</div>
+                        <h3 class="text-2xl font-bit text-white">REACT</h3>
+                        <div class="w-full bg-gray-800 h-2 mt-4">
+                            <div class="bg-cyber-cyan h-2 w-[80%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 px-4 container mx-auto">
+            <h2
+                class="text-lg sm:text-3xl md:text-4xl font-bit text-cyber-pink mb-12 text-center md:text-right break-words">
+                >> PROJECT_DATABASE</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="relative group">
+                    <div
+                        class="absolute inset-0 bg-cyber-pink blur opacity-20 group-hover:opacity-40 transition-opacity">
+                    </div>
+                    <div class="relative bg-black border-2 border-cyber-pink p-4 h-full flex flex-col">
+                        <div
+                            class="h-40 bg-gray-900 border border-gray-700 mb-4 flex items-center justify-center overflow-hidden">
+                            <span class="text-cyber-pink font-bit text-4xl opacity-50">PROJ_01</span>
+                        </div>
+                        <h3 class="text-2xl font-bit text-white mb-2">NEON_COMMERCE</h3>
+                        <p class="text-gray-400 mb-4 flex-grow">A full-stack e-commerce platform styled like a 90s
+                            shopping catalog.</p>
+                        <div class="flex gap-2 mb-4 text-xs font-bit text-cyber-pink">
+                            <span>[REACT]</span><span>[NODE]</span>
+                        </div>
+                        <button
+                            class="w-full py-2 border border-cyber-pink text-cyber-pink hover:bg-cyber-pink hover:text-black font-bit text-xs uppercase transition-colors">
+                            VIEW_SOURCE
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="relative group">
+                    <div
+                        class="absolute inset-0 bg-cyber-green blur opacity-20 group-hover:opacity-40 transition-opacity">
+                    </div>
+                    <div class="relative bg-black border-2 border-cyber-green p-4 h-full flex flex-col">
+                        <div
+                            class="h-40 bg-gray-900 border border-gray-700 mb-4 flex items-center justify-center overflow-hidden">
+                            <span class="text-cyber-green font-bit text-4xl opacity-50">PROJ_02</span>
+                        </div>
+                        <h3 class="text-2xl font-bit text-white mb-2">RETRO_DASH</h3>
+                        <p class="text-gray-400 mb-4 flex-grow">Analytics dashboard featuring data visualization with
+                            pixel-art charts.</p>
+                        <div class="flex gap-2 mb-4 text-xs font-bit text-cyber-green">
+                            <span>[VUE]</span><span>[D3]</span>
+                        </div>
+                        <button
+                            class="w-full py-2 border border-cyber-green text-cyber-green hover:bg-cyber-green hover:text-black font-bit text-xs uppercase transition-colors">
+                            VIEW_SOURCE
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="relative group">
+                    <div
+                        class="absolute inset-0 bg-cyber-cyan blur opacity-20 group-hover:opacity-40 transition-opacity">
+                    </div>
+                    <div class="relative bg-black border-2 border-cyber-cyan p-4 h-full flex flex-col">
+                        <div
+                            class="h-40 bg-gray-900 border border-gray-700 mb-4 flex items-center justify-center overflow-hidden">
+                            <span class="text-cyber-cyan font-bit text-4xl opacity-50">PROJ_03</span>
+                        </div>
+                        <h3 class="text-2xl font-bit text-white mb-2">CYBER_CHAT</h3>
+                        <p class="text-gray-400 mb-4 flex-grow">Real-time chat application with end-to-end encryption
+                            and themed rooms.</p>
+                        <div class="flex gap-2 mb-4 text-xs font-bit text-cyber-cyan">
+                            <span>[FIREBASE]</span><span>[JS]</span>
+                        </div>
+                        <button
+                            class="w-full py-2 border border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan hover:text-black font-bit text-xs uppercase transition-colors">
+                            VIEW_SOURCE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 px-4 bg-black border-t-4 border-cyber-green">
+            <div class="container mx-auto max-w-2xl">
+                <div class="bg-gray-900 border-2 border-cyber-green p-1 shadow-[0_0_20px_rgba(0,255,65,0.15)]">
+                    <!-- Terminal Header -->
+                    <div
+                        class="bg-cyber-green px-2 py-1 flex justify-between items-center text-black font-bit text-xs mb-4">
+                        <span>C:\USERS\GUEST\MAIL.EXE</span>
+                        <span>[X]</span>
+                    </div>
+
+                    <!-- Terminal Body -->
+                    <form class="p-4 md:p-8 space-y-6">
+                        <div>
+                            <label class="block text-cyber-green font-bit text-xs mb-2">ENTER_NAME:</label>
+                            <input type="text"
+                                class="w-full bg-black border border-gray-700 text-cyber-green font-terminal text-xl p-2 focus:border-cyber-green focus:outline-none focus:shadow-[0_0_10px_#00ff41]"
+                                placeholder="_">
+                        </div>
+                        <div>
+                            <label class="block text-cyber-green font-bit text-xs mb-2">ENTER_EMAIL:</label>
+                            <input type="email"
+                                class="w-full bg-black border border-gray-700 text-cyber-green font-terminal text-xl p-2 focus:border-cyber-green focus:outline-none focus:shadow-[0_0_10px_#00ff41]"
+                                placeholder="_">
+                        </div>
+                        <div>
+                            <label class="block text-cyber-green font-bit text-xs mb-2">INPUT_MESSAGE:</label>
+                            <textarea rows="4"
+                                class="w-full bg-black border border-gray-700 text-cyber-green font-terminal text-xl p-2 focus:border-cyber-green focus:outline-none focus:shadow-[0_0_10px_#00ff41]"
+                                placeholder="_"></textarea>
+                        </div>
+                        <button type="button"
+                            class="w-full py-4 bg-cyber-green/10 border-2 border-cyber-green text-cyber-green font-bit hover:bg-cyber-green hover:text-black transition-all hover-glitch">
+                            SEND_TRANSMISSION
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center bg-black border-t border-gray-800">
+        <p class="text-gray-500 font-terminal text-xl">
+            &copy; 2088 <span class="text-cyber-pink">BRIAN</span>. SYSTEM_ALL_RIGHTS_RESERVED.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>
