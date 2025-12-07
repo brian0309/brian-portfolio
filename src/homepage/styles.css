@@ -299,7 +299,7 @@ body {
     width: 30px;
     height: 30px;
     pointer-events: auto;
-    cursor: pointer;
+    cursor: crosshair;
     will-change: transform;
 }
 
@@ -311,7 +311,6 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
     transition: transform 0.1s, opacity 0.3s, background-color 0.1s;
 }
 
