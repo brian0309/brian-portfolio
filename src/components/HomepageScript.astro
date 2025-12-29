@@ -18,6 +18,8 @@ setTimeout(typeText, 1000);
 
 // --- BUG GENERATION AND INTERACTION LOGIC ---
 const bugContainer = document.getElementById('bug-container');
+const bugStatus = document.getElementById('bug-status');
+const footerBrian = document.getElementById('footer-brian');
 const winModal = document.getElementById('win-modal');
 const closeWinModalBtn = document.getElementById('close-win-modal');
 
@@ -25,6 +27,8 @@ const MAX_BUGS = 15; // Maximum number of bugs on screen
 const activeBugs = []; // Store bug objects for physics
 let gameWon = false; // Track if player has won
 let eliminatedCount = 0; // Track eliminated bugs
+let brianClicks = 0;
+let gameInitialized = false;
 
 // Status display elements
 const statusText = document.getElementById('status-text');
@@ -358,16 +362,41 @@ function showFeedback(x, y) {
 // Start the loop
 requestAnimationFrame(updateBugs);
 
-// Initial bug population (random 5-10 bugs)
-const initialBugCount = 5 + Math.floor(Math.random() * 6); // 5 to 10
-for (let i = 0; i < initialBugCount; i++) {
-    createBug();
-}
+// Easter Egg Logic: Initialize game after 3 clicks on "BRIAN" in footer
+function initBugGame() {
+    if (gameInitialized) return;
+    gameInitialized = true;
 
-// Respawn Timer (Every 10 seconds) - only if game not won
-setInterval(() => {
-    if (!gameWon && activeBugs.length < MAX_BUGS) {
+    if (bugContainer) bugContainer.classList.remove('hidden');
+    if (bugStatus) bugStatus.classList.remove('hidden');
+
+    // Initial bug population (random 5-10 bugs)
+    const initialBugCount = 5 + Math.floor(Math.random() * 6); // 5 to 10
+    for (let i = 0; i < initialBugCount; i++) {
         createBug();
     }
-}, 10000);
+
+    // Respawn Timer (Every 10 seconds) - only if game not won
+    setInterval(() => {
+        if (!gameWon && activeBugs.length < MAX_BUGS) {
+            createBug();
+        }
+    }, 10000);
+}
+
+if (footerBrian) {
+    footerBrian.addEventListener('click', () => {
+        brianClicks++;
+        if (brianClicks >= 3) {
+            initBugGame();
+            // Optional: visual feedback that it's activated
+            footerBrian.classList.remove('text-cyber-pink');
+            footerBrian.classList.add('text-cyber-green');
+            setTimeout(() => {
+                footerBrian.classList.remove('text-cyber-green');
+                footerBrian.classList.add('text-cyber-pink');
+            }, 1000);
+        }
+    });
+}
 </script>
