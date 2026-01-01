@@ -1,0 +1,117 @@
+<!-- Success Popup Modal -->
+<div id="success-modal" class="fixed inset-0 z-[100] hidden flex justify-center items-center">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <div
+        class="relative bg-black border-4 border-cyber-green p-8 md:p-12 max-w-lg md:max-w-2xl w-full mx-4 shadow-[0_0_50px_rgba(0,255,65,0.4)] overflow-hidden">
+        <div class="text-center mt-6">
+            <h2 class="text-1xl sm:text-4xl md:text-3xl lg:text-3xl font-bit text-cyber-green mb-6 glitch-text break-words leading-tight"
+                data-text="TRANSMISSION SENT!">TRANSMISSION SENT!</h2>
+            <p class="text-gray-300 font-terminal text-lg md:text-2xl mb-8">
+                STATUS: SUCCESSFUL.<br>
+                YOUR MESSAGE HAS BEEN RECEIVED.
+            </p>
+            <div class="text-cyber-yellow font-bit text-xs md:text-base animate-pulse">
+                > ENCRYPTING_REPLY...
+            </div>
+            <div class="mt-6 flex justify-center">
+                <button id="close-success-modal"
+                    class="px-4 py-2 text-cyber-pink font-bit text-xs border border-cyber-pink hover:bg-cyber-pink hover:text-black transition-colors">
+                    [CLOSE]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Joke Popup Modal -->
+<div id="joke-modal" class="fixed inset-0 z-[100] hidden flex justify-center items-center">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <div
+        class="relative bg-black border-4 border-cyber-pink p-8 md:p-12 max-w-lg md:max-w-2xl w-full mx-4 shadow-[0_0_50px_rgba(255,0,60,0.4)] overflow-hidden">
+        <div class="text-center mt-6">
+            <h2 class="text-1xl sm:text-4xl md:text-3xl lg:text-3xl font-bit text-cyber-pink mb-6 glitch-text break-words leading-tight"
+                data-text="ACCESS DENIED!">ACCESS DENIED!</h2>
+            <p class="text-gray-300 font-terminal text-lg md:text-2xl mb-8">
+                NICE TRY, GUEST.<br>
+                YOU CAN'T CLOSE THIS TRANSMISSION.<br>
+                THE ONLY WAY OUT IS TO SEND A MESSAGE!
+            </p>
+            <div class="text-cyber-yellow font-bit text-xs md:text-base animate-pulse">
+                > ESCAPE_SEQUENCE_FAILED...
+            </div>
+            <div class="mt-6 flex justify-center">
+                <button id="close-joke-modal"
+                    class="px-4 py-2 text-cyber-cyan font-bit text-xs border border-cyber-cyan hover:bg-cyber-cyan hover:text-black transition-colors">
+                    [BACK_TO_WORK]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script is:inline>
+    const form = document.getElementById('contact-form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const successModal = document.getElementById('success-modal');
+    const closeSuccessModalBtn = document.getElementById('close-success-modal');
+    const jokeModal = document.getElementById('joke-modal');
+    const closeJokeModalBtn = document.getElementById('close-joke-modal');
+    const terminalXBtn = document.getElementById('close-terminal-joke');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        formData.append("access_key", "b8fa5a61-4d1a-4a0d-b28e-902f29ba840d");
+
+        const originalText = submitBtn.textContent;
+
+        submitBtn.textContent = "Sending...";
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Show success modal instead of alert
+                if (successModal) {
+                    successModal.classList.remove('hidden');
+                }
+                form.reset();
+            } else {
+                alert("Error: " + data.message);
+            }
+
+        } catch (error) {
+            alert("Something went wrong. Please try again.");
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Close modal logic
+    if (closeSuccessModalBtn && successModal) {
+        closeSuccessModalBtn.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+        });
+    }
+
+    // Joke modal logic
+    if (terminalXBtn && jokeModal) {
+        terminalXBtn.addEventListener('click', () => {
+            jokeModal.classList.remove('hidden');
+        });
+    }
+
+    if (closeJokeModalBtn && jokeModal) {
+        closeJokeModalBtn.addEventListener('click', () => {
+            jokeModal.classList.add('hidden');
+        });
+    }
+</script>

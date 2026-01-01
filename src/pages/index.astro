@@ -3,6 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import HomepageScript from '../components/HomepageScript.astro';
+import ContactFormScript from '../components/ContactFormScript.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
 
@@ -84,7 +85,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
                     <div class="w-full md:w-1/2 border-l-4 border-cyber-pink pl-6">
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bit text-cyber-pink mb-6">>> WHO_AM_I?</h2>
                         <p class="text-xl md:text-2xl leading-relaxed text-gray-300">
-                            I love building and tinkering with things. I have some programming knowledge—enough to explore ideas, break stuff, fix it, and help bring ideas to life.
+                            Hi, I'm Brian. I love building and tinkering with things. I have some coding knowledge enough to explore ideas, break stuff, fix it, and bring ideas to life.
                             I previously worked in customer support and currently work in QA, where curiosity and attention to detail matter every day.
                         </p>
                         <div class="mt-6 text-cyber-yellow">
@@ -236,30 +237,36 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
                         <div
                             class="bg-cyber-green px-2 py-1 flex justify-between items-center text-black font-bit text-xs mb-4">
                             <span>C:\USERS\GUEST\MAIL.EXE</span>
-                            <span>[X]</span>
+                            <button id="close-terminal-joke" class="hover:bg-black hover:text-cyber-green px-1 transition-colors">[X]</button>
                         </div>
 
                         <!-- Terminal Body -->
-                        <form class="p-4 md:p-8 space-y-6">
+                        <form id="contact-form" class="p-4 md:p-8 space-y-6">
                             <div>
                                 <label class="block text-cyber-green font-bit text-xs mb-2">ENTER_NAME:</label>
                                 <input type="text"
+                                    name="name"
+                                    required
                                     class="w-full bg-black border border-gray-700 text-cyber-green font-terminal text-xl p-2 focus:border-cyber-green focus:outline-none focus:shadow-[0_0_10px_#00ff41]"
                                     placeholder="_">
                             </div>
                             <div>
                                 <label class="block text-cyber-green font-bit text-xs mb-2">ENTER_EMAIL:</label>
                                 <input type="email"
+                                    name="email"
+                                    required
                                     class="w-full bg-black border border-gray-700 text-cyber-green font-terminal text-xl p-2 focus:border-cyber-green focus:outline-none focus:shadow-[0_0_10px_#00ff41]"
                                     placeholder="_">
                             </div>
                             <div>
                                 <label class="block text-cyber-green font-bit text-xs mb-2">INPUT_MESSAGE:</label>
                                 <textarea rows="4"
+                                    name="message"
+                                    required
                                     class="w-full bg-black border border-gray-700 text-cyber-green font-terminal text-xl p-2 focus:border-cyber-green focus:outline-none focus:shadow-[0_0_10px_#00ff41]"
                                     placeholder="_"></textarea>
                             </div>
-                            <button type="button"
+                            <button type="submit"
                                 class="w-full py-4 bg-cyber-green/10 border-2 border-cyber-green text-cyber-green font-bit hover:bg-cyber-green hover:text-black transition-all hover-glitch">
                                 SEND_TRANSMISSION
                             </button>
@@ -270,5 +277,6 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 		</main>
 		<Footer />
         <HomepageScript />
+        <ContactFormScript />
 	</body>
 </html>
