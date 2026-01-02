@@ -57,6 +57,27 @@
     const jokeModal = document.getElementById('joke-modal');
     const closeJokeModalBtn = document.getElementById('close-joke-modal');
     const terminalXBtn = document.getElementById('close-terminal-joke');
+    const body = document.body;
+
+    const openModal = (modal) => {
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        modal.classList.remove('tv-close');
+        modal.classList.add('tv-open');
+        modal.classList.add('flex');
+        if (body) body.classList.add('overflow-hidden');
+    };
+
+    const closeModal = (modal) => {
+        if (!modal) return;
+        modal.classList.remove('tv-open');
+        modal.classList.add('tv-close');
+        if (body) body.classList.remove('overflow-hidden');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    };
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -79,9 +100,7 @@
 
             if (response.ok) {
                 // Show success modal instead of alert
-                if (successModal) {
-                    successModal.classList.remove('hidden');
-                }
+                openModal(successModal);
                 form.reset();
             } else {
                 alert("Error: " + data.message);
@@ -98,20 +117,20 @@
     // Close modal logic
     if (closeSuccessModalBtn && successModal) {
         closeSuccessModalBtn.addEventListener('click', () => {
-            successModal.classList.add('hidden');
+            closeModal(successModal);
         });
     }
 
     // Joke modal logic
     if (terminalXBtn && jokeModal) {
         terminalXBtn.addEventListener('click', () => {
-            jokeModal.classList.remove('hidden');
+            openModal(jokeModal);
         });
     }
 
     if (closeJokeModalBtn && jokeModal) {
         closeJokeModalBtn.addEventListener('click', () => {
-            jokeModal.classList.add('hidden');
+            closeModal(jokeModal);
         });
     }
 </script>
