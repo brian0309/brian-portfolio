@@ -1,0 +1,173 @@
+---
+title: TRADING JOURNAL
+description: Clean and simple trading journal application.
+pubDate: '2025-09-20'
+updatedDate: '2025-11-10'
+heroImage: ../../assets/blog-placeholder-5.jpg
+---
+
+import ImageCarousel from '../../components/ImageCarousel.astro';
+import img1 from '../../assets/blog-placeholder-5.jpg';
+import img2 from '../../assets/blog-placeholder-4.jpg';
+import img3 from '../../assets/blog-placeholder-3.jpg';
+import img4 from '../../assets/blog-placeholder-1.jpg';
+
+# TRADING JOURNAL
+
+## Overview
+
+TRADING JOURNAL is a clean, intuitive mobile trading journal application built with React Native and Expo. It's designed to help traders track their trading decisions, analyze patterns, and improve their trading psychology through detailed journaling and analytics.
+
+## Features
+
+- **Trade Logging**: Simple and fast trade entry with all essential details
+- **Trade Analysis**: Review historical trades with detailed metrics
+- **Performance Metrics**: Win rate, average win/loss, profit factor calculations
+- **Trade Patterns**: Identify recurring patterns in your trades
+- **Market Notes**: Daily market observations and trading psychology notes
+- **Offline Support**: Works seamlessly without internet connection
+- **Data Export**: Export trading data for external analysis
+- **Charts & Analytics**: Visual representations of trading performance
+
+## Tech Stack
+
+- **Framework**: React Native
+- **Build Tools**: Expo
+- **Database**: Local storage with AsyncStorage
+- **Charts**: Custom charting solution
+- **Navigation**: React Navigation
+
+## Core Features
+
+### Trade Entry
+
+Quick entry form capturing:
+- Entry price and exit price
+- Position size
+- Trading pair/symbol
+- Entry and exit time
+- Trade type (long/short)
+- Trade outcome (win/loss)
+- Trade notes
+
+### Analytics Dashboard
+
+Real-time calculations:
+- Total trades
+- Win rate percentage
+- Average winning trade
+- Average losing trade
+- Profit factor
+- Best trade
+- Worst trade
+
+### Journaling
+
+Separate section for:
+- Daily trading notes
+- Psychology observations
+- Market conditions
+- Lessons learned
+
+## Application Screenshots
+
+<ImageCarousel
+  title="INTERFACE_GALLERY"
+  images={[
+    {
+      src: img1.src,
+      alt: "Dashboard screen showing trading metrics",
+      caption: "Dashboard with key performance indicators. View your win rate, total trades, and average profit/loss at a glance."
+    },
+    {
+      src: img2.src,
+      alt: "Trade entry form",
+      caption: "Quick and intuitive trade entry form. Log entry price, exit price, position size, and trade notes in seconds."
+    },
+    {
+      src: img3.src,
+      alt: "Analytics and charts view",
+      caption: "Visual analytics showing your trading performance over time. Identify trends and patterns in your trading behavior."
+    },
+    {
+      src: img4.src,
+      alt: "Journal entries list",
+      caption: "Browse your trade history with detailed information. Filter and search through all your past trades."
+    }
+  ]}
+/>
+
+## Getting Started
+
+### Prerequisites
+- Node.js v16+
+- Expo CLI
+- iOS/Android development environment (for native builds)
+
+### Installation
+
+```bash
+git clone <repository>
+cd trading-journal
+npm install
+```
+
+### Running on Development Server
+
+```bash
+expo start
+```
+
+Then scan the QR code with Expo Go app or press `i` for iOS simulator or `a` for Android emulator.
+
+### Building
+
+For iOS:
+```bash
+eas build --platform ios
+```
+
+For Android:
+```bash
+eas build --platform android
+```
+
+## Data Structure
+
+Each trade entry includes:
+```json
+{
+  "id": "unique_id",
+  "date": "YYYY-MM-DD",
+  "symbol": "EURUSD",
+  "type": "long",
+  "entryPrice": 1.0850,
+  "exitPrice": 1.0870,
+  "size": 1.5,
+  "outcome": "win",
+  "profit": 30,
+  "notes": "Good trade, followed setup",
+  "setup": "Support bounce"
+}
+```
+
+## Usage Tips
+
+1. **Consistency**: Log trades immediately after closing them
+2. **Detailed Notes**: Include what you were thinking when entering
+3. **Regular Review**: Review trades weekly to identify patterns
+4. **Honest Analysis**: Record losses objectively for improvement
+5. **Track Metrics**: Monitor your statistics over time
+
+## Future Enhancements
+
+- Cloud sync across devices
+- Social features for trader community
+- AI-powered trade analysis
+- Advanced charting tools
+- Integration with trading brokers
+
+---
+
+**Status**: Active Development  
+**Repository**: [GitHub Link]

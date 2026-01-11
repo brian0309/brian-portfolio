@@ -1,0 +1,469 @@
+---
+export interface Props {
+	images: { src: string; alt: string; caption: string }[];
+	title?: string;
+}
+
+const { images, title } = Astro.props;
+---
+
+<div class="image-carousel-container">
+	<style>
+		.image-carousel-container {
+			width: 100%;
+			margin: 2rem 0;
+		}
+
+		.carousel-title {
+			font-family: var(--font-bit);
+			color: var(--color-cyber-pink);
+			font-size: 1.2rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			margin-bottom: 1.5rem;
+			text-align: center;
+		}
+
+		.carousel-wrapper {
+			position: relative;
+			display: flex;
+			justify-content: center;
+		}
+
+		.carousel-nav-button {
+			width: 50px;
+			height: 50px;
+			border: 2px solid var(--color-cyber-cyan);
+			background: #050505;
+			color: var(--color-cyber-cyan);
+			cursor: pointer;
+			font-size: 1.5rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+			font-family: var(--font-bit);
+			flex-shrink: 0;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			z-index: 10;
+		}
+
+		.carousel-nav-button:hover {
+			border-color: var(--color-cyber-pink);
+			color: var(--color-cyber-pink);
+			box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+			transform: translateY(calc(-50% - 2px));
+		}
+
+		.carousel-nav-button:active {
+			transform: translateY(-50%);
+		}
+
+		.carousel-prev {
+			left: -70px;
+		}
+
+		.carousel-next {
+			right: -70px;
+		}
+
+		.carousel-content {
+			flex: 1;
+			max-width: 600px;
+		}
+
+		.carousel-image-container {
+			border: 2px solid var(--color-cyber-green);
+			background: #000;
+			padding: 1rem;
+			margin-bottom: 1rem;
+			box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+			position: relative;
+		}
+
+		.carousel-image-container::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.02));
+			pointer-events: none;
+		}
+
+		.carousel-image {
+			width: 100%;
+			height: auto;
+			display: block;
+			image-rendering: crisp-edges;
+			cursor: pointer;
+			transition: transform 0.2s ease;
+		}
+
+		.carousel-image:hover {
+			transform: scale(1.02);
+		}
+
+		.fullscreen-modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.95);
+			z-index: 1000;
+			animation: fadeIn 0.2s ease;
+		}
+
+		.fullscreen-modal.active {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			animation: turn-on 0.4s forwards;
+		}
+
+		.fullscreen-modal.closing {
+			animation: turn-off 0.3s forwards;
+		}
+
+		@keyframes turn-on {
+			0% {
+				transform: scale(1, 0.001) skewX(10deg);
+				opacity: 0;
+			}
+			50% {
+				transform: scale(1, 0.002) skewX(0deg);
+				opacity: 1;
+			}
+			70% {
+				transform: scale(1, 0.5);
+			}
+			100% {
+				transform: scale(1, 1);
+			}
+		}
+
+		@keyframes turn-off {
+			0% {
+				transform: scale(1, 1);
+				opacity: 1;
+			}
+			50% {
+				transform: scale(1, 0.002);
+				opacity: 1;
+			}
+			100% {
+				transform: scale(0, 0);
+				opacity: 0;
+			}
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		.fullscreen-content {
+			position: relative;
+			width: 90%;
+			height: 90%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 1rem;
+		}
+
+		.fullscreen-image-wrapper {
+			position: relative;
+			max-width: 100%;
+			max-height: 80%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.fullscreen-image {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain;
+			image-rendering: crisp-edges;
+		}
+
+		.fullscreen-caption {
+			font-family: var(--font-terminal);
+			color: #cbd5e1;
+			font-size: 1rem;
+			line-height: 1.6;
+			text-align: center;
+			max-width: 600px;
+		}
+
+		.fullscreen-close {
+			position: absolute;
+			top: 1.5rem;
+			right: 1.5rem;
+			width: 50px;
+			height: 50px;
+			border: 2px solid var(--color-cyber-pink);
+			background: #050505;
+			color: var(--color-cyber-pink);
+			cursor: pointer;
+			font-size: 1.8rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+			font-family: var(--font-bit);
+		}
+
+		.fullscreen-close:hover {
+			box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+			transform: rotate(90deg);
+		}
+
+		.fullscreen-nav {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 2rem;
+			pointer-events: none;
+		}
+
+		.fullscreen-nav button {
+			pointer-events: auto;
+			width: 40px;
+			height: 40px;
+			border: 2px solid var(--color-cyber-cyan);
+			background: rgba(5, 5, 5, 0.8);
+			color: var(--color-cyber-cyan);
+			cursor: pointer;
+			font-size: 1.3rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+			font-family: var(--font-bit);
+		}
+
+		.fullscreen-nav button:hover {
+			border-color: var(--color-cyber-pink);
+			color: var(--color-cyber-pink);
+			box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+		}
+
+		.carousel-counter {
+			text-align: center;
+			font-family: var(--font-bit);
+			color: var(--color-cyber-green);
+			font-size: 0.9rem;
+			margin-bottom: 1rem;
+			letter-spacing: 0.04em;
+		}
+
+		.carousel-caption {
+			font-family: var(--font-terminal);
+			color: #cbd5e1;
+			font-size: 0.95rem;
+			line-height: 1.6;
+			background: rgba(5, 5, 5, 0.8);
+			border-left: 3px solid var(--color-cyber-cyan);
+			padding: 1rem;
+			margin-top: 1rem;
+		}
+
+		@media (max-width: 768px) {
+			.carousel-wrapper {
+				gap: 0;
+			}
+
+			.carousel-nav-button {
+				width: 32px;
+				height: 32px;
+				font-size: 1rem;
+				background: rgba(5, 5, 5, 0.8);
+			}
+
+			.carousel-prev {
+				left: 10px;
+			}
+
+			.carousel-next {
+				right: 10px;
+			}
+
+			.carousel-caption {
+				font-size: 0.85rem;
+				padding: 0.75rem;
+			}
+		}
+	</style>
+
+	{title && <h3 class="carousel-title">{title}</h3>}
+
+	<div class="carousel-wrapper" data-images={JSON.stringify(images)}>
+		<div class="carousel-content">
+			<div class="carousel-image-container">
+				<button class="carousel-nav-button carousel-prev" aria-label="Previous image">
+					‹
+				</button>
+				<img
+					class="carousel-image"
+					src={images[0].src}
+					alt={images[0].alt}
+					data-carousel-image
+				/>
+				<button class="carousel-nav-button carousel-next" aria-label="Next image">
+					›
+				</button>
+			</div>
+
+			<div class="carousel-counter">
+				<span data-carousel-counter>1</span> / <span>{images.length}</span>
+			</div>
+
+			<div class="carousel-caption" data-carousel-caption>
+				{images[0].caption}
+			</div>
+		</div>
+	</div>
+
+	<div class="fullscreen-modal" data-fullscreen-modal>
+		<div class="fullscreen-content">
+			<button class="fullscreen-close" data-close-fullscreen aria-label="Close fullscreen">
+				✕
+			</button>
+			<div class="fullscreen-image-wrapper">
+				<div class="fullscreen-nav">
+					<button data-fullscreen-prev aria-label="Previous image">‹</button>
+					<button data-fullscreen-next aria-label="Next image">›</button>
+				</div>
+				<img class="fullscreen-image" data-fullscreen-image alt="" />
+			</div>
+			<div class="fullscreen-caption" data-fullscreen-caption></div>
+		</div>
+	</div>
+
+	<script>
+		const carousels = document.querySelectorAll('.image-carousel-container');
+
+		carousels.forEach((carousel) => {
+			const wrapper = carousel.querySelector('[data-images]');
+			const imagesData = wrapper?.getAttribute('data-images');
+			const images = imagesData ? JSON.parse(imagesData) : [];
+			let currentIndex = 0;
+
+			const imageEl = carousel.querySelector('[data-carousel-image]') as HTMLImageElement;
+			const counterEl = carousel.querySelector('[data-carousel-counter]');
+			const captionEl = carousel.querySelector('.carousel-caption');
+			const prevBtn = carousel.querySelector('.carousel-prev');
+			const nextBtn = carousel.querySelector('.carousel-next');
+
+			if (!imageEl || !prevBtn || !nextBtn) return;
+
+			function updateCarousel() {
+				if (imageEl && counterEl && captionEl) {
+					imageEl.src = images[currentIndex].src;
+					imageEl.alt = images[currentIndex].alt;
+					captionEl.textContent = images[currentIndex].caption;
+					counterEl.textContent = String(currentIndex + 1);
+				}
+			}
+
+			prevBtn.addEventListener('click', () => {
+				currentIndex = (currentIndex - 1 + images.length) % images.length;
+				updateCarousel();
+			});
+
+			nextBtn.addEventListener('click', () => {
+				currentIndex = (currentIndex + 1) % images.length;
+				updateCarousel();
+			});
+			const modal = carousel.querySelector('[data-fullscreen-modal]') as HTMLElement;
+			const fullscreenImage = modal?.querySelector('[data-fullscreen-image]') as HTMLImageElement;
+			const fullscreenCaption = modal?.querySelector('[data-fullscreen-caption]');
+			const closeBtn = modal?.querySelector('[data-close-fullscreen]') as HTMLButtonElement;
+			const fullscreenPrevBtn = modal?.querySelector('[data-fullscreen-prev]') as HTMLButtonElement;
+			const fullscreenNextBtn = modal?.querySelector('[data-fullscreen-next]') as HTMLButtonElement;
+
+			if (imageEl && modal && fullscreenImage) {
+				const openFullscreen = () => {
+					fullscreenImage.src = images[currentIndex].src;
+					fullscreenImage.alt = images[currentIndex].alt;
+					if (fullscreenCaption) {
+						fullscreenCaption.textContent = images[currentIndex].caption;
+					}
+					modal.style.display = 'flex';
+					modal.classList.remove('closing');
+					modal.classList.add('active');
+					document.body.style.overflow = 'hidden';
+				};
+
+				const closeFullscreen = () => {
+					modal.classList.remove('active');
+					modal.classList.add('closing');
+					setTimeout(() => {
+						modal.style.display = 'none';
+						modal.classList.remove('closing');
+						document.body.style.overflow = '';
+					}, 300);
+				};
+
+				imageEl.addEventListener('click', openFullscreen);
+
+				closeBtn?.addEventListener('click', closeFullscreen);
+
+				modal.addEventListener('click', (e) => {
+					if (e.target === modal) {
+						closeFullscreen();
+					}
+				});
+
+				fullscreenPrevBtn?.addEventListener('click', () => {
+					currentIndex = (currentIndex - 1 + images.length) % images.length;
+					fullscreenImage.src = images[currentIndex].src;
+					fullscreenImage.alt = images[currentIndex].alt;
+					if (fullscreenCaption) {
+						fullscreenCaption.textContent = images[currentIndex].caption;
+					}
+					updateCarousel();
+				});
+
+				fullscreenNextBtn?.addEventListener('click', () => {
+					currentIndex = (currentIndex + 1) % images.length;
+					fullscreenImage.src = images[currentIndex].src;
+					fullscreenImage.alt = images[currentIndex].alt;
+					if (fullscreenCaption) {
+						fullscreenCaption.textContent = images[currentIndex].caption;
+					}
+					updateCarousel();
+				});
+
+				// Keyboard navigation
+				document.addEventListener('keydown', (e) => {
+					if (!modal.classList.contains('active')) return;
+					if (e.key === 'Escape') {
+						closeFullscreen();
+					}
+					if (e.key === 'ArrowLeft') {
+						fullscreenPrevBtn?.click();
+					}
+					if (e.key === 'ArrowRight') {
+						fullscreenNextBtn?.click();
+					}
+				});
+			}
+		});
+	</script>
+</div>

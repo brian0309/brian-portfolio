@@ -1,0 +1,245 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const projects = (await getCollection('project')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			:root {
+				--card-radius: 0;
+			}
+
+			.page-shell {
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 3rem 1.25rem 4rem;
+				position: relative;
+				z-index: 10;
+			}
+
+			.section-title {
+				font-family: var(--font-bit);
+				color: var(--color-cyber-pink);
+				font-size: clamp(1.5rem, 2vw, 2rem);
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				margin-bottom: 2rem;
+				text-align: center;
+			}
+
+			.project-grid {
+				list-style: none;
+				padding: 0;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+				gap: 1.5rem;
+				width: min(1200px, 100%);
+				align-items: stretch;
+			}
+
+			@media (min-width: 1100px) {
+				.project-grid {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+				.project-card {
+					min-height: 360px;
+				}
+			}
+
+			.project-card .project-thumb {
+				border-radius: 0;
+			}
+
+			.project-card {
+				position: relative;
+				display: flex;
+				min-height: 340px;
+				border: 2px solid var(--color-cyber-green);
+				border-radius: var(--card-radius);
+				padding: 1.25rem;
+				background: #050505;
+				box-shadow: none;
+				transition: transform 0.2s ease, border-color 0.2s ease;
+				overflow: hidden;
+			}
+
+			.project-card::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				pointer-events: none;
+				background: linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.04));
+			}
+
+			.project-card:hover {
+				transform: translateY(-6px);
+			}
+
+			.project-card a {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+				color: #e5e7eb;
+				text-decoration: none;
+				height: 100%;
+			}
+
+			.read-more {
+				display: block;
+				margin-top: auto;
+				padding: 0.65rem 1rem;
+				border: 2px solid var(--color-cyber-green);
+				font-family: var(--font-bit);
+				font-size: 0.78rem;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				text-align: center;
+				color: #f8fafc;
+				background: rgba(0, 255, 65, 0.08);
+				transition: transform 0.15s ease, background 0.15s ease;
+			}
+
+			.read-more:hover {
+				transform: translateY(-2px);
+				background: rgba(0, 255, 65, 0.16);
+			}
+
+			.project-thumb {
+				width: 100%;
+				border-radius: 12px;
+				overflow: hidden;
+				border: 1px solid rgba(255, 255, 255, 0.06);
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+			}
+
+			.project-thumb img {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
+
+			.project-title {
+				font-family: var(--font-bit);
+				font-size: clamp(1rem, 1.2vw, 1.4rem);
+				color: #f8fafc;
+				margin: 0;
+				letter-spacing: 0.04em;
+			}
+
+			.project-meta {
+				margin: 0;
+				color: #94a3b8;
+				font-size: 0.9rem;
+			}
+
+			.project-excerpt {
+				margin: 0;
+				color: #cbd5e1;
+				line-height: 1.5;
+				font-size: 0.98rem;
+			}
+
+			.color-1 {
+				border-color: var(--color-cyber-pink);
+				box-shadow: none;
+			}
+			.color-1 .read-more {
+				border-color: var(--color-cyber-pink);
+				background: rgba(255, 0, 127, 0.08);
+				color: var(--color-cyber-pink);
+				transition: background 0.3s ease, color 0.3s ease;
+			}
+			.color-1 .read-more:hover {
+				background: var(--color-cyber-pink);
+				color: #050505;
+			}
+
+			.color-2 {
+				border-color: var(--color-cyber-green);
+				box-shadow: none;
+			}
+			.color-2 .read-more {
+				border-color: var(--color-cyber-green);
+				background: rgba(0, 255, 65, 0.08);
+				color: var(--color-cyber-green);
+				transition: background 0.3s ease, color 0.3s ease;
+			}
+			.color-2 .read-more:hover {
+				background: var(--color-cyber-green);
+				color: #050505;
+			}
+
+			.color-3 {
+				border-color: var(--color-cyber-cyan);
+				box-shadow: none;
+			}
+			.color-3 .read-more {
+				border-color: var(--color-cyber-cyan);
+				background: rgba(0, 255, 255, 0.08);
+				color: var(--color-cyber-cyan);
+				transition: background 0.3s ease, color 0.3s ease;
+			}
+			.color-3 .read-more:hover {
+				background: var(--color-cyber-cyan);
+				color: #050505;
+			}
+
+			@media (max-width: 720px) {
+				.page-shell {
+					padding: 2rem 1rem 3rem;
+				}
+				.section-title {
+					margin-bottom: 1.5rem;
+				}
+			}
+		</style>
+	</head>
+
+	<body class="font-terminal relative">
+		<div class="scanlines"></div>
+		<div class="crt-flicker"></div>
+		<Header />
+		<main class="page-shell">
+			<section>
+				<h1 class="section-title">&gt;&gt; PROJECTS</h1>
+				<ul class="project-grid">
+					{
+						projects.map((project, index) => (
+							<li class={`project-card color-${(index % 3) + 1}`}>
+								<a href={`/projects/${project.id}/`}>
+									{project.data.heroImage && (
+										<div class="project-thumb">
+											<Image width={720} height={360} src={project.data.heroImage} alt="" />
+										</div>
+									)}
+									<h3 class="project-title">{project.data.title}</h3>
+									<p class="project-meta">
+										<FormattedDate date={project.data.pubDate} />
+									</p>
+									<p class="project-excerpt">{project.data.description}</p>
+									<span class="read-more">READ_MORE</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
