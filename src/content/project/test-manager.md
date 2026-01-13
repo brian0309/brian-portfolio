@@ -1,12 +1,10 @@
 ---
-title: TEST_MANAGER
+title: TEST MANAGER
 description: Test Case Management System for organizing and tracking software test cases. Uses React, MongoDB, and Node.js. With Gemini AI integration.
 pubDate: '2025-10-15'
 updatedDate: '2025-11-20'
 heroImage: ../../assets/blog-placeholder-2.jpg
 ---
-
-# TEST_MANAGER
 
 ## Overview
 
