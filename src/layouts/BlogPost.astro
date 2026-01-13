@@ -47,6 +47,61 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			:global(.prose p) {
 				margin-bottom: 1.1em;
 			}
+			:global(.prose ul) {
+				list-style-type: none;
+				margin-left: 0;
+				margin-bottom: 1.1em;
+				padding-left: 2em;
+			}
+			:global(.prose ul li) {
+				margin-bottom: 0.6em;
+				line-height: 1.6;
+				position: relative;
+				padding-left: 0.6em;
+			}
+			:global(.prose ul li::before) {
+				content: '▸';
+				position: absolute;
+				left: -1.2em;
+				color: rgb(var(--accent-r), var(--accent-g), var(--accent-b));
+				font-weight: bold;
+				text-shadow: 0 0 4px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.5);
+			}
+			:global(.prose ol) {
+				list-style-type: decimal;
+				margin-left: 0;
+				margin-bottom: 1.1em;
+				padding-left: 2.5em;
+				color: rgb(var(--gray-dark));
+			}
+			:global(.prose ol li) {
+				margin-bottom: 0.6em;
+				line-height: 1.6;
+				color: rgb(var(--gray-dark));
+			}
+			:global(.prose ol li::marker) {
+				color: rgb(var(--accent-r), var(--accent-g), var(--accent-b));
+				font-weight: bold;
+				text-shadow: 0 0 4px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.5);
+			}
+			:global(.prose blockquote) {
+				border-left: 4px solid rgb(var(--accent-r), var(--accent-g), var(--accent-b));
+				padding-left: 1.2em;
+				padding: 1em 0 1em 1.2em;
+				margin: 1.5em 0;
+				background: rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.05);
+				font-style: italic;
+				color: #cbd5e1;
+				box-shadow: inset 0 0 12px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.08);
+				border-radius: 4px;
+			}
+			:global(.prose blockquote p) {
+				margin: 0;
+				margin-bottom: 0.6em;
+			}
+			:global(.prose blockquote p:last-child) {
+				margin-bottom: 0;
+			}
 			:global(.prose h1),
 			:global(.prose h2),
 			:global(.prose h3),
@@ -64,6 +119,50 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			:global(.prose h3) { font-size: clamp(1.3rem, 2.4vw, 1.8rem); }
 			:global(.prose h4) { font-size: clamp(1.1rem, 2vw, 1.5rem); }
 			:global(.prose h5) { font-size: clamp(1rem, 1.6vw, 1.25rem); }
+			:global(.prose pre) {
+				position: relative;
+				background: rgba(0, 0, 0, 0.6);
+				border: 1px solid rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.3);
+				border-radius: 8px;
+				padding: 1.5em;
+				margin: 1.5em 0;
+				overflow-x: auto;
+				box-shadow: 0 0 12px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.1);
+			}
+			:global(.prose pre::before) {
+				content: '';
+				position: absolute;
+				top: 1.5em;
+				right: 1.5em;
+				width: 0.9em;
+				height: 0.9em;
+				background-color: rgb(var(--accent-r), var(--accent-g), var(--accent-b));
+				mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E");
+				mask-size: contain;
+				mask-repeat: no-repeat;
+				-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E");
+				-webkit-mask-size: contain;
+				-webkit-mask-repeat: no-repeat;
+				cursor: pointer;
+				opacity: 0.6;
+				transition: opacity 0.2s ease;
+				filter: drop-shadow(0 0 4px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 0.3));
+			}
+			:global(.prose pre:hover::before) {
+				opacity: 1;
+			}
+			:global(.prose code) {
+				color: #00ff41;
+				font-family: var(--font-terminal);
+				font-size: 0.95em;
+				text-shadow: 0 0 4px rgba(0, 255, 65, 0.3);
+			}
+			:global(.prose pre code) {
+				color: inherit;
+				text-shadow: none;
+				background: none;
+				padding: 0;
+			}
 			.title {
 				margin-bottom: 1.75em;
 				padding: 1.5em 1.25em 1em;
@@ -183,5 +282,99 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			document.documentElement.style.setProperty('--accent-g', randomColor.g);
 			document.documentElement.style.setProperty('--accent-b', randomColor.b);
 		</script>
+		<script>
+			// Copy code block functionality
+			document.addEventListener('DOMContentLoaded', () => {
+				const codeBlocks = document.querySelectorAll('.prose pre');
+				
+				codeBlocks.forEach((block) => {
+					block.addEventListener('click', async (e) => {
+						// Only trigger if clicking the copy icon area (top-right region)
+						const rect = block.getBoundingClientRect();
+						const clickX = e.clientX - rect.left;
+						const clickY = e.clientY - rect.top;
+						
+						// Check if click is in the top-right corner (where the icon is)
+						if (clickX > rect.width - 60 && clickY < 50) {
+							const code = block.querySelector('code');
+							if (code) {
+								try {
+									await navigator.clipboard.writeText(code.textContent || '');
+									showToast('Code copied to clipboard!');
+								} catch (err) {
+									showToast('Failed to copy code', true);
+								}
+							}
+						}
+					});
+				});
+
+				function showToast(message, isError = false) {
+					// Remove existing toast if any
+					const existingToast = document.querySelector('.copy-toast');
+					if (existingToast) {
+						existingToast.remove();
+					}
+
+					// Create toast element
+					const toast = document.createElement('div');
+					toast.className = 'copy-toast';
+					toast.textContent = message;
+					
+					// Get current accent color
+					const r = getComputedStyle(document.documentElement).getPropertyValue('--accent-r');
+					const g = getComputedStyle(document.documentElement).getPropertyValue('--accent-g');
+					const b = getComputedStyle(document.documentElement).getPropertyValue('--accent-b');
+					
+					toast.style.cssText = `
+						position: fixed;
+						bottom: 2rem;
+						left: 50%;
+						transform: translateX(-50%);
+						background: rgba(0, 0, 0, 0.9);
+						color: rgb(${r}, ${g}, ${b});
+						padding: 1rem 1.5rem;
+						border-radius: 8px;
+						border: 2px solid rgb(${r}, ${g}, ${b});
+						box-shadow: 0 0 20px rgba(${r}, ${g}, ${b}, 0.5);
+						font-family: var(--font-terminal);
+						font-size: 1rem;
+						z-index: 10000;
+						animation: slideUp 0.3s ease-out;
+						text-shadow: 0 0 8px rgba(${r}, ${g}, ${b}, 0.8);
+					`;
+
+					document.body.appendChild(toast);
+
+					// Remove toast after 2 seconds
+					setTimeout(() => {
+						toast.style.animation = 'slideDown 0.3s ease-in';
+						setTimeout(() => toast.remove(), 300);
+					}, 2000);
+				}
+			});
+		</script>
+		<style is:global>
+			@keyframes slideUp {
+				from {
+					transform: translateX(-50%) translateY(100px);
+					opacity: 0;
+				}
+				to {
+					transform: translateX(-50%) translateY(0);
+					opacity: 1;
+				}
+			}
+			@keyframes slideDown {
+				from {
+					transform: translateX(-50%) translateY(0);
+					opacity: 1;
+				}
+				to {
+					transform: translateX(-50%) translateY(100px);
+					opacity: 0;
+				}
+			}
+		</style>
 	</body>
 </html>
