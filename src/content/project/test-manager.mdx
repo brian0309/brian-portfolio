@@ -1,0 +1,162 @@
+---
+title: Test Case Manager. AI-Powered Real-Time Test Management
+description: A TypeScript MERN test case management app featuring Socket.io collaboration and Google Gemini AI for automated test generation.
+pubDate: '2025-12-14'
+updatedDate: '2026-01-18'
+heroImage: ../../assets/blog-placeholder-2.jpg
+---
+
+<div style="text-align: center;">
+
+</div>
+`TEST_MANAGER` is a full‑stack TypeScript MERN application for organizing and tracking test suites, test cases, and test runs. It provides real‑time collaboration via Socket.io, cookie‑based JWT authentication, file upload support, reporting dashboards, and server‑side Google Gemini AI integration for automated test suggestion and generation.
+
+It solves common testing bottlenecks by replacing the "old way" of managing test cases in fragmented Excel files or static documents. Instead of dealing with versioning conflicts, lack of real‑time visibility, and manual test generation, `TEST_MANAGER` provides a centralized, collaborative environment where teams can manage their entire testing lifecycle with AI-assisted efficiency.
+<h2 style="text-align: center;">Links</h2>
+
+<div style="text-align: center;">
+<a href="#">[Link to Source Code]</a> <a href="https://test-case-manager.onrender.com/" target="_blank">[View Application]</a> <a href="/#contact">[Contact Me]</a>
+</div>
+
+## Features
+
+- **Hierarchical test organization**: Projects → Test Suites → Test Cases
+- **Test runs & execution tracking**: Pass/Fail/Blocked/Skipped with run groups
+- **Bulk operations**: clone, move, reorder, bulk-create/delete
+- **Real‑time collaboration**: presence, field‑level editing, and live sync via Socket.io
+- **AI test generation**: Google Gemini integration (streaming and non‑streaming endpoints)
+- **Per‑user encrypted Gemini keys**: users can store their own Gemini API key encrypted on the server
+- **JWT cookie auth**: HTTP‑only `token` cookie used by REST and sockets
+- **Google OAuth**: sign in with Google for seamless authentication
+- **Email flows**: verification and password reset (Mailtrap used in tests/dev)
+- **File uploads & Images**: upload screenshots and embed images directly into test cases for better visual context
+- **Rich text editing**: format test case steps and descriptions using a built-in rich text editor
+- **Reporting & analytics**: execution summaries and trend charts
+
+## Tech Stack
+
+- Node.js + TypeScript (backend)
+- Express + Mongoose (MongoDB)
+- React + Vite (frontend)
+- Socket.io for real‑time
+- Google Gemini (via `@google/genai`) for AI suggestions
+- Jest + Supertest for tests
+- Tailwind CSS, Zustand, Axios on the frontend
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js v16+ (recommended)
+- MongoDB instance (local or managed)
+- A Google Gemini API key per user (optional for AI features)
+
+### Environment variables (important)
+
+- `MONGO_URI` — MongoDB connection string used by the backend
+- `JWT_SECRET` — JWT signing key for cookie auth and socket auth
+- `ENCRYPTION_KEY` — 32‑character server key used to encrypt/decrypt per‑user Gemini API keys (REQUIRED for Gemini key storage)
+- `NODE_ENV` — controls cookie `secure`/`sameSite` behavior and static serving
+- `PORT` — backend port (default 5000)
+- `VITE_API_URL` / `VITE_DEV_API_URL` — frontend API base URL
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` — Google OAuth
+- `MAILTRAP_TOKEN` / `MAILTRAP_ENDPOINT` — Mailtrap config for email testing
+- `COOKIE_DOMAIN` — optional cookie domain
+- `VERCEL` — set to `1` when deploying backend as a Vercel serverless function
+
+**Note:** `ENCRYPTION_KEY` must be exactly 32 characters; the app encrypts per‑user Gemini keys with this key. The docs previously referenced a single `GEMINI_API_KEY`; the implementation stores per‑user keys in the DB (encrypted) and uses `ENCRYPTION_KEY` to protect them.
+
+Generate a secure 32‑character hex `ENCRYPTION_KEY` locally:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
+```
+
+### Install
+
+Run from the repo root:
+
+```bash
+npm install
+cd frontend && npm install && cd ..
+```
+
+### Dev / Run
+
+Start the full monorepo dev environment (root):
+
+```bash
+npm run dev
+```
+
+Or run pieces separately:
+
+```bash
+# Backend (watch mode)
+npx tsx watch backend/index.ts
+
+# Frontend
+cd frontend && npm run dev
+```
+
+
+
+## AI Integration (Google Gemini)
+
+The project integrates Google Gemini on the server side. Key points:
+
+- The app supports per‑user Gemini API keys, which are stored encrypted on the `User` model. Encryption requires `ENCRYPTION_KEY` in the server environment.
+- Server code is in `backend/services/geminigen/` (`gemini.service.ts`, `gemini.controller.ts`, `gemini.route.ts`).
+- Endpoints include:
+	- `POST /api/gemini/key` — save a user's encrypted Gemini key and model preference
+	- `GET /api/gemini/settings` — check whether the user has a key and preferred model
+	- `POST /api/gemini/generate` — non‑streaming generation (returns generated test cases JSON)
+	- `POST /api/gemini/generate-stream` — streaming generation via SSE
+- Models default to `gemini-2.5-flash` unless overridden per user.
+
+See `backend/services/geminigen/gemini.service.ts` for implementation details and error handling.
+
+### Troubleshooting & Tips
+
+- Missing or incorrect `ENCRYPTION_KEY` will cause secure storage to fail; the server logs a warning: "ENCRYPTION_KEY is missing or not 32 characters." Generate a proper 32‑char key as shown above.
+- If `/api/gemini/generate` returns 403 with message "Gemini API Key not found", add your key via `POST /api/gemini/key` in the UI or via curl.
+- Rate limits and quota errors are simplified by the service into friendly messages such as "Rate limit exceeded" or "Free tier quota exceeded." Consider upgrading your Gemini plan for heavy usage.
+- The Gemini generate endpoints return JSON. If the response fails to parse (truncated JSON), the service attempts recovery heuristics; however, the streaming endpoint provides incremental chunks which are more resilient for long outputs.
+- For email flows in dev, configure `MAILTRAP_TOKEN` and `MAILTRAP_ENDPOINT` and check `backend/mailtrap` utilities in tests.
+
+### Tests & Typecheck
+
+```bash
+npm run type-check
+```
+
+### Testing & CI
+
+- Unit tests and integration tests run with `npm test`. Integration tests use an in‑memory MongoDB for isolation:
+
+```bash
+# Run all tests
+npm test
+# Run only integration tests
+npm run test:integration
+```
+
+## Real‑time Architecture
+
+- Socket.io is initialized in `backend/socket/socketManager.ts` and used by controllers to emit events after CRUD operations.
+- Socket auth uses the same HTTP‑only `token` cookie as REST auth. The middleware in `backend/middleware/verifyToken.ts` verifies JWTs and sets `req.userId`.
+- Room patterns: `project:{id}`, `suite:{id}`, `testcase:{id}`. Event naming follows `{entity}:{action}` (e.g., `testcase:created`, `testcase:updated`, `testcase:editing`).
+- Frontend socket client is in `frontend/src/services/socket.ts` and derives its URL from `VITE_API_URL` (strips `/api`).
+
+
+## Quick Setup Checklist
+
+1. Create `.env` with `MONGO_URI`, `JWT_SECRET`, and a 32‑char `ENCRYPTION_KEY`.
+2. Start backend and frontend (`npm run dev` / `npx tsx watch backend/index.ts` / `cd frontend && npm run dev`).
+3. Register a user and optionally add your Gemini API key via the UI (stored encrypted).
+
+## Status
+
+**Status**: Active Development
+
+**Repository**: see project root for contributions and tests
