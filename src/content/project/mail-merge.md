@@ -2,11 +2,9 @@
 title: MAIL_MERGE
 description: Mail merge application for personalized mass emails. Uses MERN Stack with redis and bullmq for job queue management.
 pubDate: '2025-12-01'
-updatedDate: '2025-12-15'
+updatedDate: '2026-01-15'
 heroImage: ../../assets/blog-placeholder-1.jpg
 ---
-
-# MAIL_MERGE
 
 ## Overview
 
