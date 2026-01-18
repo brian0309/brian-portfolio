@@ -383,3 +383,224 @@ body {
         transform: translateY(-50px);
     }
 }
+
+/* ==========================================================================
+   GLOBAL BUTTON STYLES
+   Use these classes to maintain consistent button styling across the site.
+   Easily modify theme colors and styles from this master file.
+   ========================================================================== */
+
+/* Base Button Style - shared foundation for all buttons */
+.btn {
+    display: inline-block;
+    font-family: var(--font-bit);
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-style: solid;
+}
+
+/* ==========================================================================
+   btn-primary - Hero CTA & View All Projects style
+   Large prominent buttons with thick borders and glitch effect
+   Colors: Pink, Green
+   ========================================================================== */
+.btn-primary {
+    padding: 0.75rem 2rem;
+    border-width: 2px;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+}
+
+.btn-primary-pink {
+    border-color: var(--color-cyber-pink);
+    color: var(--color-cyber-pink);
+    background: transparent;
+}
+
+.btn-primary-pink:hover {
+    background-color: var(--color-cyber-pink);
+    color: #000;
+}
+
+.btn-primary-green {
+    border-color: var(--color-cyber-green);
+    color: var(--color-cyber-green);
+    background: transparent;
+}
+
+.btn-primary-green:hover {
+    background-color: var(--color-cyber-green);
+    color: #000;
+}
+
+/* Responsive font size for primary buttons */
+@media (min-width: 768px) {
+    .btn-primary {
+        font-size: 0.875rem;
+    }
+}
+
+/* ==========================================================================
+   btn-secondary - Project Card buttons
+   Full-width buttons with single border
+   Colors: Pink, Green, Cyan
+   ========================================================================== */
+.btn-secondary {
+    width: 100%;
+    padding: 0.5rem 0;
+    border-width: 1px;
+    font-size: 0.75rem;
+}
+
+.btn-secondary-pink {
+    border-color: var(--color-cyber-pink);
+    color: var(--color-cyber-pink);
+    background: transparent;
+}
+
+.btn-secondary-pink:hover,
+.btn-secondary-pink:focus,
+.btn-secondary-pink:active {
+    background-color: var(--color-cyber-pink);
+    color: #000;
+}
+
+.btn-secondary-green {
+    border-color: var(--color-cyber-green);
+    color: var(--color-cyber-green);
+    background: transparent;
+}
+
+.btn-secondary-green:hover,
+.btn-secondary-green:focus,
+.btn-secondary-green:active {
+    background-color: var(--color-cyber-green);
+    color: #000;
+}
+
+.btn-secondary-cyan {
+    border-color: var(--color-cyber-cyan);
+    color: var(--color-cyber-cyan);
+    background: transparent;
+}
+
+.btn-secondary-cyan:hover,
+.btn-secondary-cyan:focus,
+.btn-secondary-cyan:active {
+    background-color: var(--color-cyber-cyan);
+    color: #000;
+}
+
+/* ==========================================================================
+   btn-modal - Modal close buttons
+   Compact buttons for modal dialogs
+   Colors: Pink, Cyan
+   ========================================================================== */
+.btn-modal {
+    padding: 0.5rem 1rem;
+    border-width: 1px;
+    font-size: 0.75rem;
+}
+
+.btn-modal-pink {
+    border-color: var(--color-cyber-pink);
+    color: var(--color-cyber-pink);
+    background: transparent;
+}
+
+.btn-modal-pink:hover {
+    background-color: var(--color-cyber-pink);
+    color: #000;
+}
+
+.btn-modal-cyan {
+    border-color: var(--color-cyber-cyan);
+    color: var(--color-cyber-cyan);
+    background: transparent;
+}
+
+.btn-modal-cyan:hover {
+    background-color: var(--color-cyber-cyan);
+    color: #000;
+}
+
+/* ==========================================================================
+   btn-menu - Mobile menu toggle button
+   Compact button with padding on all sides
+   Color: Green
+   ========================================================================== */
+.btn-menu {
+    padding: 0.5rem;
+    border-width: 1px;
+    font-size: 0.75rem;
+    border-color: var(--color-cyber-green);
+    color: var(--color-cyber-green);
+    background: transparent;
+}
+
+.btn-menu:hover {
+    background-color: var(--color-cyber-green);
+    color: #000;
+}
+
+/* ==========================================================================
+   btn-menu-close - Mobile menu close button
+   Larger close button with red styling
+   ========================================================================== */
+.btn-menu-close {
+    margin-top: 2rem;
+    padding: 0.5rem 1rem;
+    border-width: 1px;
+    font-size: 1.5rem;
+    font-family: var(--font-terminal);
+    border-color: #ef4444;
+    color: #ef4444;
+    background: transparent;
+}
+
+.btn-menu-close:hover {
+    background-color: #ef4444;
+    color: #000;
+}
+
+/* ==========================================================================
+   btn-submit - Form submit button
+   Full-width button with background tint and glitch effect
+   Color: Green
+   ========================================================================== */
+.btn-submit {
+    width: 100%;
+    padding: 1rem 0;
+    border-width: 2px;
+    border-color: var(--color-cyber-green);
+    color: var(--color-cyber-green);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.btn-submit:hover {
+    background-color: var(--color-cyber-green);
+    color: #000;
+}
+
+/* ==========================================================================
+   btn-terminal-close - Terminal window close button
+   Minimal styling for terminal header X button
+   ========================================================================== */
+.btn-terminal-close {
+    padding: 0 0.25rem;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-terminal-close:hover {
+    background-color: #000;
+    color: var(--color-cyber-green);
+}
